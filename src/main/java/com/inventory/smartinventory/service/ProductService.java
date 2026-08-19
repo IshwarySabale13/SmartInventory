@@ -7,13 +7,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.inventory.smartinventory.model.Product;
+import com.inventory.smartinventory.model.Supplier;
 import com.inventory.smartinventory.repository.ProductRepository;
+import com.inventory.smartinventory.repository.SupplierRepository;
 
 @Service
 public class ProductService 
 {
 	  @Autowired
 	    private ProductRepository productRepository;
+	  
+	  @Autowired
+	  private SupplierRepository supplierRepository;
 
 	    public Product saveProduct(Product product)
 	    {
@@ -44,7 +49,18 @@ public class ProductService
 	        {
 	            return null;
 	        }
-
+	        
+	        Long supplierId = product.getSuppliers().get(0).getId();	
+	        
+	        Supplier supplier = supplierRepository.findById(supplierId).orElse(null);
+	        
+	        if(supplier == null)
+	        {
+	        	return null;
+	        }
+	        
+	        existingProduct.getSuppliers().add(supplier);
+	        
 	        existingProduct.setName(product.getName());
 	        existingProduct.setPrice(product.getPrice());
 	        existingProduct.setQuantity(product.getQuantity());
@@ -62,5 +78,5 @@ public class ProductService
 	    	}
 	    	productRepository.deleteById(id);
 	    }
-
+	    
 }

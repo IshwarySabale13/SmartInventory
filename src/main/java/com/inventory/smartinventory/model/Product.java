@@ -1,9 +1,15 @@
 package com.inventory.smartinventory.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -63,4 +69,20 @@ public class Product
 	
 	@ManyToOne
 	private Category category;
+	
+	@ManyToMany
+	@JoinTable(
+			name = "product_supplier",
+			joinColumns = @JoinColumn(name = "product_id"),
+			inverseJoinColumns = @JoinColumn(name = "supplier_id")
+			)
+	private List<Supplier> suppliers = new ArrayList<>();
+
+	public List<Supplier> getSuppliers() {
+		return suppliers;
+	}
+
+	public void setSuppliers(List<Supplier> suppliers) {
+		this.suppliers = suppliers;
+	} 
 }
